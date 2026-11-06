@@ -1,3 +1,4 @@
+from datetime import date
 class Vehicule:
     def __init__(self, id, marque, modele, immatriculation, tarif_jour):
         self.id = id
@@ -40,6 +41,23 @@ class Moto(Vehicule):
             base = base * 0.9
         return base
 
+class Client:
+    def __init__(self, id, nom, telephone, numero_permis):
+        if not nom.strip():
+            raise ValueError("Nom vide")
+        self.id = id
+        self.nom = nom
+        self.telephone = telephone
+        self.numero_permis = numero_permis
+
+class Maintenance:
+    def __init__(self, id, vehicule_id, date_debut, date_fin):
+        if date_fin < date_debut:
+            raise ValueError("La date de fin precede la date de debut")
+        self.id = id
+        self.vehicule_id = vehicule_id
+        self.date_debut = date_debut
+        self.date_fin = date_fin
 
 
 v= Vehicule(1, "Toyota", "corolla", "AA-1234", 50)
@@ -64,3 +82,17 @@ m=Moto(3, "Yamaha", "R15", "CC-916", 25, 155)
 print(m.cylindree)
 print(c.calculer_cout(2))
 print(m.calculer_cout(5))
+
+cl=Client(1,"Michelande","3246-1809","HT123478")
+print(cl.nom)
+try:
+    Client(2,'',"1134-5676","HT5678")
+except ValueError as e:
+    print("refuse :", e)
+
+m1=Maintenance(1,2,date(2026,11,10),date(2026,11,12))
+print(m1.date_debut)
+try:
+    Maintenance(2,2,date(2026,11,12),date(2026,11,10))
+except ValueError as e:
+    print("refuse :", e)
