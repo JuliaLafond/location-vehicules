@@ -19,15 +19,26 @@ class Vehicule:
             raise ValueError("Etat invalide")
         self._etat = nouvel_etat
 
+    def calculer_cout(self,nb_jours ):
+        return self._tarif_jour * nb_jours
+
 class Voiture(Vehicule):
     def __init__(self, id, marque, modele, immatriculation, tarif_jour, nb_portes):
         super().__init__(id, marque, modele, immatriculation, tarif_jour)
         self.nb_portes = nb_portes
+    def calculer_cout(self,nb_jours ):
+        base= super().calculer_cout(nb_jours)
+        return base + 5 * nb_jours
 
 class Moto(Vehicule):
     def __init__(self, id, marque, modele, immatriculation, tarif_jour, cylindree):
         super().__init__(id, marque, modele, immatriculation, tarif_jour)
         self.cylindree = cylindree
+    def calculer_cout(self,nb_jours ):
+        base = super().calculer_cout(nb_jours)
+        if nb_jours > 3:
+            base = base * 0.9
+        return base
 
 
 
@@ -51,3 +62,5 @@ c.changer_etat("Loue")
 
 m=Moto(3, "Yamaha", "R15", "CC-916", 25, 155)
 print(m.cylindree)
+print(c.calculer_cout(2))
+print(m.calculer_cout(5))
