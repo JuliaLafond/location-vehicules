@@ -59,6 +59,27 @@ class Maintenance:
         self.date_debut = date_debut
         self.date_fin = date_fin
 
+class Reservation:
+    STATUTS = ("confirmee", "en cours", "terminee", "annulee")
+    def __init__(self, id, client_id, vehicule_id, date_debut, date_fin, montant):
+        if date_fin < date_debut:
+            raise ValueError("La date de fin precede la date de debut")
+        self.id = id
+        self.client_id = client_id
+        self.vehicule_id = vehicule_id
+        self.date_debut = date_debut
+        self.date_fin = date_fin
+        self.montant = montant
+        self._statut = "confirmee"
+
+    def changer_statut(self, nouveau_statut):
+        if nouveau_statut not in self.STATUTS:
+            raise ValueError("Statut invalide")
+        self._statut = nouveau_statut
+
+    def nb_jours(self):
+        return (self.date_fin - self.date_debut).days
+
 
 v= Vehicule(1, "Toyota", "corolla", "AA-1234", 50)
 print(v.etat)
@@ -96,3 +117,27 @@ try:
     Maintenance(2,2,date(2026,11,12),date(2026,11,10))
 except ValueError as e:
     print("refuse :", e)
+
+r=Reservation(1,1,2,date(2026,11,11),date(2026,11,13), 130)
+print(r.client_id)
+print(r.vehicule_id)
+
+try:
+    Reservation(2,1,2,date(2026,11,13),date(2026,11,11),130)
+except ValueError as e:
+    print("refuse :", e)
+
+r=Reservation(1,1,2,date(2026,11,11),date(2026,11,13),130)
+r.changer_statut("en cours")
+print(r._statut)
+
+try:
+    r.changer_statut("bambou")
+except ValueError as e:
+    print('refuse :', e)
+
+c = Voiture(2, "Honda", "Civic", "BB-5678", 60, 4)
+r = Reservation(1, 1, 2, date(2026, 11, 11), date(2026, 11, 13), 0)
+print(r.nb_jours())
+r.montant = c.calculer_cout(r.nb_jours())
+print(r.montant)
