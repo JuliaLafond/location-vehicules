@@ -79,6 +79,18 @@ class Reservation:
 
     def nb_jours(self):
         return (self.date_fin - self.date_debut).days
+class Agence:
+    def __init__(self):
+        self.vehicules = []
+        self.clients = []
+        self.reservations = []
+        self.maintenances = []
+
+    def ajouter_client(self, client):
+        self.clients.append(client)
+
+    def ajouter_vehicule(self, vehicule):
+        self.vehicules.append(vehicule)
 
 
 v= Vehicule(1, "Toyota", "corolla", "AA-1234", 50)
@@ -141,3 +153,11 @@ r = Reservation(1, 1, 2, date(2026, 11, 11), date(2026, 11, 13), 0)
 print(r.nb_jours())
 r.montant = c.calculer_cout(r.nb_jours())
 print(r.montant)
+
+ag = Agence()
+ag.ajouter_client(Client(1, "Marie Joseph", "2345-5676", "HT1233"))
+print(len(ag.clients))
+print(ag.clients[0].nom)
+ag.ajouter_vehicule(Voiture(1, "Honda", "Civic", "BB-5678", 60, 4))
+print(len(ag.vehicules))
+print(ag.vehicules[0].marque)
