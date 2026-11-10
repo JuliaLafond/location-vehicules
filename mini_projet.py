@@ -14,6 +14,9 @@ class Vehicule:
             raise ValueError("Le tarif doit etre positif")
         self._tarif_jour = valeur
 
+    def obtenir_tarif(self):
+        return self._tarif_jour
+
     def changer_etat(self, nouvel_etat):
         nouvel_etat = nouvel_etat.lower()
         if nouvel_etat not in("disponible", "loue","maintenance"):
@@ -79,18 +82,45 @@ class Reservation:
 
     def nb_jours(self):
         return (self.date_fin - self.date_debut).days
+
+def tarif_du_vehicule(v):
+    return v.obtenir_tarif()
+
 class Agence:
     def __init__(self):
         self.vehicules = []
         self.clients = []
         self.reservations = []
         self.maintenances = []
+        self.prochain_id_client = 1
+        self.prochain_id_vehicule = 1
 
     def ajouter_client(self, client):
         self.clients.append(client)
 
     def ajouter_vehicule(self, vehicule):
         self.vehicules.append(vehicule)
+
+    def nouveau_id_client(self):
+        id_donne = self.prochain_id_client
+        self.prochain_id_client += 1
+        return id_donne
+
+    def nouveau_id_vehicule(self):
+        id_vehicule = self.prochain_id_vehicule
+        self.prochain_id_vehicule += 1
+        return id_vehicule
+
+    def rechercher_par_marque(self, marque):
+        resultat=[]
+        for v in self.vehicules:
+            if v.marque.lower() == marque.lower():
+                resultat.append(v)
+        return resultat
+
+    def trier_par_tarif(self):
+        return sorted(self.vehicules, key=tarif_du_vehicule)
+
 
 
 v= Vehicule(1, "Toyota", "corolla", "AA-1234", 50)
@@ -161,3 +191,32 @@ print(ag.clients[0].nom)
 ag.ajouter_vehicule(Voiture(1, "Honda", "Civic", "BB-5678", 60, 4))
 print(len(ag.vehicules))
 print(ag.vehicules[0].marque)
+
+# agence=Agence()
+# print(agence.nouveau_id_client())
+# print(agence.nouveau_id_client())
+# print(agence.nouveau_id_client())
+#
+# ag2=Agence()
+# print(ag2.nouveau_id_vehicule())
+# print(ag2.nouveau_id_vehicule())
+# print(ag2.nouveau_id_vehicule())
+ag3 = Agence()
+ag3.ajouter_client(Client(ag3.nouveau_id_client(), "Marie Joseph", "2345-5676", "HT1233"))
+ag3.ajouter_client(Client(ag3.nouveau_id_client(), "Mar Joseph", "2345-5676", "HT1233"))
+print(ag3.clients[0].id)
+print(ag3.clients[1].id)
+
+ag4 = Agence()
+ag4.ajouter_vehicule(Voiture(ag4.nouveau_id_vehicule(),"HONDA", "Civic", "BB-5678", 60, 4))
+ag4.ajouter_vehicule(Moto(ag4.nouveau_id_vehicule(), "Honda", "CB500", "MM-2222", 40, 500))
+ag4.ajouter_vehicule(Voiture(ag4.nouveau_id_vehicule(), "Toyota", "Corolla", "BB-3333", 55, 4))
+
+print(len(ag4.rechercher_par_marque("Honda")))
+print(len(ag4.rechercher_par_marque("Toyota")))
+print(len(ag4.rechercher_par_marque("BMW")))
+
+for v in ag4.trier_par_tarif():
+    print(v.modele, v.obtenir_tarif())
+
+
