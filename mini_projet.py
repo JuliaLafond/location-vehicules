@@ -5,8 +5,8 @@ class Vehicule:
         self.marque = marque
         self.modele = modele
         self.immatriculation = immatriculation
-        self.tarif_jour = 0
-        self.etat = "disponible"
+        self._tarif_jour = 0
+        self._etat = "disponible"
         self.changer_tarif(tarif_jour)
 
     def changer_tarif(self, valeur):
@@ -17,6 +17,9 @@ class Vehicule:
     def obtenir_tarif(self):
         return self._tarif_jour
 
+    def obtenir_etat(self):
+        return self._etat
+
     def changer_etat(self, nouvel_etat):
         nouvel_etat = nouvel_etat.lower()
         if nouvel_etat not in("disponible", "loue","maintenance"):
@@ -25,6 +28,8 @@ class Vehicule:
 
     def calculer_cout(self,nb_jours ):
         return self._tarif_jour * nb_jours
+
+
 
 class Voiture(Vehicule):
     def __init__(self, id, marque, modele, immatriculation, tarif_jour, nb_portes):
@@ -94,6 +99,8 @@ class Agence:
         self.maintenances = []
         self.prochain_id_client = 1
         self.prochain_id_vehicule = 1
+        self.prochain_id_reservation = 1
+        self.prochain_id_maintenance = 1
 
     def ajouter_client(self, client):
         self.clients.append(client)
@@ -111,6 +118,16 @@ class Agence:
         self.prochain_id_vehicule += 1
         return id_vehicule
 
+    def nouveau_id_reservation(self):
+        id_reservation = self.prochain_id_reservation
+        self.prochain_id_reservation += 1
+        return id_reservation
+
+    def nouveau_id_maintenance(self):
+        id_maintenance = self.prochain_id_maintenance
+        self.prochain_id_maintenance += 1
+        return id_maintenance
+
     def rechercher_par_marque(self, marque):
         resultat=[]
         for v in self.vehicules:
@@ -121,10 +138,27 @@ class Agence:
     def trier_par_tarif(self):
         return sorted(self.vehicules, key=tarif_du_vehicule)
 
+    def trouver_vehicule(self, vehicule_id):
+        for v in self.vehicules:
+            if v.id == vehicule_id:
+                return v
+            return None
+
+    def est_disponible(self, vehicule_id, debut,fin):
+        for r in self.reservations:
+            if r.vehicule_id == vehicule_id and r._statut != "annulee" :
+                if debut < r.date_fin and r.date_debut < fin:
+                    return False
+        for m in self.maintenances:
+            if m.vehicule_id == vehicule_id :
+                if debut < m.date_fin and m.date_debut < fin:
+                    return False
+        return True
+
 
 
 v= Vehicule(1, "Toyota", "corolla", "AA-1234", 50)
-print(v.etat)
+print(v.obtenir_etat())
 print(v.marque)
 try:
     v.changer_tarif(-5)
@@ -219,4 +253,14 @@ print(len(ag4.rechercher_par_marque("BMW")))
 for v in ag4.trier_par_tarif():
     print(v.modele, v.obtenir_tarif())
 
+ag5 = Agence()
+ag5.ajouter_vehicule(Voiture(ag5.nouveau_id_vehicule(), "Honda", "civic", "BB-5678", 60, 4))
+ag5.reservations.append(Reservation(1, 1, 1, date(2026, 11, 11), date(2026, 11, 13), 130))
+print(ag5.est_disponible(1, date(2026, 11, 11), date(2026, 11, 14)))
+print(ag5.est_disponible(1, date(2026, 11, 13), date(2026, 11, 15)))
+
+ag6 = Agence()
+print(ag6.nouveau_id_reservation())
+print(ag6.nouveau_id_reservation())
+print(ag6.nouveau_id_maintenance())
 
