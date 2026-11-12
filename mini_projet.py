@@ -144,6 +144,12 @@ class Agence:
                 return v
             return None
 
+    def trouver_client(self, client_id):
+        for c in self.clients:
+            if c.id == client_id:
+                return c
+        return None
+
     def est_disponible(self, vehicule_id, debut,fin):
         for r in self.reservations:
             if r.vehicule_id == vehicule_id and r._statut != "annulee" :
@@ -154,6 +160,24 @@ class Agence:
                 if debut < m.date_fin and m.date_debut < fin:
                     return False
         return True
+
+    def reserver(self, client_id, vehicule_id, debut, fin):
+        client = self.trouver_client(client_id)
+        if client is None:
+            raise ValueError("Client introuvable")
+        vehicule = self.trouver_vehicule(vehicule_id)
+        if vehicule is None:
+            raise ValueError("Vehicule introuvable")
+        if fin <= debut :
+            raise ValueError("La location doit durer au moins 1 jour")
+        if not self.est_disponible(vehicule_id, debut, fin):
+            raise ValueError("Vehicule non disponible sur cette periode")
+
+        nb_jours = (fin-debut).days
+        montant = vehicule.calculer_cout(nb_jours)
+        reservation = Reservation(self.nouveau_id_reservation(), client_id, vehicule_id, debut, fin, montant)
+        self.reservations.append(reservation)
+        return reservation
 
 
 
@@ -264,3 +288,15 @@ print(ag6.nouveau_id_reservation())
 print(ag6.nouveau_id_reservation())
 print(ag6.nouveau_id_maintenance())
 
+ag7 = Agence()
+ag7.ajouter_client(Client(ag7.nouveau_id_client(), "Marie Joseph", "2345-5676", "HT1233"))
+ag7.ajouter_vehicule(Voiture(ag7.nouveau_id_vehicule(), "Honda", "Civic", "BB-5678", 60, 4))
+
+r1 = ag7.reserver(1,1,date(2026,11, 20), date(2026, 11, 23))
+print(r1.montant)
+
+try:
+    ag7.reserver(1,1,date(2026,11, 22), date(2026, 11, 23))
+except ValueError as e:
+    print('refuse :', e)
+print(len(ag7.reservations))
