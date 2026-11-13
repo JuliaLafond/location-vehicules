@@ -79,6 +79,7 @@ class Reservation:
         self.date_fin = date_fin
         self.montant = montant
         self._statut = "confirmee"
+        self.montant_rembourse = 0
 
     def changer_statut(self, nouveau_statut):
         if nouveau_statut not in self.STATUTS:
@@ -150,6 +151,13 @@ class Agence:
                 return c
         return None
 
+    def trouver_reservation(self, reservation_id):
+        for r in self.reservations:
+            if r.id == reservation_id:
+                return r
+        return None
+
+
     def est_disponible(self, vehicule_id, debut,fin):
         for r in self.reservations:
             if r.vehicule_id == vehicule_id and r._statut != "annulee" :
@@ -178,6 +186,34 @@ class Agence:
         reservation = Reservation(self.nouveau_id_reservation(), client_id, vehicule_id, debut, fin, montant)
         self.reservations.append(reservation)
         return reservation
+
+    def annuler(self, reservation_id, aujourdhui):
+        reservation = self.trouver_reservation(reservation_id)
+        if reservation is None:
+            raise ValueError("Reservation introuvable")
+        if reservation._statut != "confirmee":
+            raise ValueError("Seule une reservation confirmee peut etre annulee")
+        if (reservation.date_debut - aujourdhui).days >=2 :
+            remboursement = reservation.montant
+        else:
+            remboursement = 0
+        reservation.changer_statut("annulee")
+        reservation.montant_rembourse = remboursement
+        return remboursement
+
+    def enregistrer_depart(self, reservation_id):
+        reservation = self.trouver_reservation(reservation_id)
+        if reservation is None:
+            raise ValueError("Reservation introuvable")
+        if reservation._statut != "confirmee":
+            raise ValueError("Le depart n'est possible que pour une reservation confirmee")
+        vehicule = self.trouver_vehicule(reservation.vehicule_id)
+        if vehicule.obtenir_etat() != "disponible":
+            raise ValueError("Le vehicule n'est pas disponible pour le depart")
+        reservation.changer_statut("en cours")
+        vehicule.changer_etat("loue")
+
+
 
 
 
@@ -300,3 +336,35 @@ try:
 except ValueError as e:
     print('refuse :', e)
 print(len(ag7.reservations))
+
+ag8 = Agence()
+ag8.ajouter_client(Client(ag8.nouveau_id_client(), "Marie Joseph", "2345-5676", "HT1233"))
+ag8.ajouter_vehicule(Voiture(ag8.nouveau_id_vehicule(), "Honda", "Civic", "BB-5678", 60, 4))
+ag8.reserver(1,1,date(2026,11, 20), date(2026, 11, 23))
+ag8.reserver(1,1,date(2026, 12, 1), date(2026, 12, 3))
+print(ag8.trouver_reservation(1).montant)
+print(ag8.trouver_reservation(98))
+
+print(ag8.annuler(1, date(2026, 11, 12)))
+print(ag8.annuler(2, date(2026, 11, 30)))
+
+try:
+    ag8.annuler(1, date(2026, 11, 12))
+except ValueError as e:
+    print('refuse :', e)
+
+print(ag8.est_disponible(1, date(2026, 11, 20), date(2026, 11, 23)))
+
+ag9= Agence()
+ag9.ajouter_client(Client(ag9.nouveau_id_client(), "Marie Joseph", "2345-5676", "HT1233"))
+ag9.ajouter_vehicule(Voiture(ag9.nouveau_id_vehicule(), "Honda", "Civic", "BB-5678", 60, 4))
+ag9.reserver(1,1,date(2026, 11, 20), date(2026, 11, 23))
+
+ag9.enregistrer_depart(1)
+print(ag9.trouver_reservation(1)._statut)
+print(ag9.trouver_vehicule(1).obtenir_etat())
+
+try:
+    ag9.enregistrer_depart(1)
+except ValueError as e:
+    print('refuse :', e)
