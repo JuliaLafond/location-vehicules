@@ -80,6 +80,9 @@ class Reservation:
         self.montant = montant
         self._statut = "confirmee"
         self.montant_rembourse = 0
+        self.date_retour=None
+        self.frais_retard= 0
+        self.montant_final= None
 
     def changer_statut(self, nouveau_statut):
         if nouveau_statut not in self.STATUTS:
@@ -212,6 +215,30 @@ class Agence:
             raise ValueError("Le vehicule n'est pas disponible pour le depart")
         reservation.changer_statut("en cours")
         vehicule.changer_etat("loue")
+
+    def enregistrer_retour(self, reservation_id, date_retour):
+        reservation = self.trouver_reservation(reservation_id)
+        if reservation is None:
+            raise ValueError("Reservation introuvable")
+        if reservation._statut != "en cours":
+            raise ValueError("Seule une location en cours peut etre rendue")
+        if date_retour < reservation.date_debut :
+            raise ValueError("la date de retour precede la date de depart")
+
+        vehicule= self.trouver_vehicule(reservation.vehicule_id)
+        montant_final = reservation.montant
+        frais_retard = 0
+        if date_retour > reservation.date_fin:
+            jours_retard = (date_retour - reservation.date_fin).days
+            frais_retard = jours_retard *vehicule.obtenir_tarif()*2
+            montant_final= reservation.montant + frais_retard
+
+        reservation.date_retour = date_retour
+        reservation.frais_retard = frais_retard
+        reservation.montant_final = montant_final
+        reservation.changer_statut("terminee")
+        vehicule.changer_etat("disponible")
+        return montant_final
 
 
 
@@ -368,3 +395,29 @@ try:
     ag9.enregistrer_depart(1)
 except ValueError as e:
     print('refuse :', e)
+
+ag10 = Agence()
+ag10.ajouter_client(Client(ag10.nouveau_id_client(), "Marie Joseph", "2345-5676", "HT1233"))
+ag10.ajouter_vehicule(Voiture(ag10.nouveau_id_vehicule(), "Honda", "Civic", "BB-5678", 60, 4))
+ag10.reserver(1,1, date(2026, 11, 20), date(2026, 11, 23))
+ag10.enregistrer_depart(1)
+
+print(ag10.enregistrer_retour(1, date(2026, 11, 23)))
+print(ag10.trouver_reservation(1)._statut)
+print(ag10.trouver_vehicule(1).obtenir_etat())
+print(ag10.trouver_reservation(1).date_retour)
+print(ag10.trouver_reservation(1).montant_final)
+
+try:
+    ag10.enregistrer_retour(1, date(2026, 11, 23))
+except ValueError as e:
+    print("refuse :",e)
+
+ag11 = Agence()
+ag11.ajouter_client(Client(ag11.nouveau_id_client(), "Marie Joseph", "2345-5676", "HT1233"))
+ag11.ajouter_vehicule(Voiture(ag11.nouveau_id_vehicule(), "Honda", "Civic", "BB-5678", 60, 4))
+ag11.reserver(1,1, date(2026, 11, 20), date(2026, 11, 23))
+ag11.enregistrer_depart(1)
+
+print(ag11.enregistrer_retour(1, date(2026, 11, 25)))
+print(ag11.trouver_reservation(1).frais_retard)
