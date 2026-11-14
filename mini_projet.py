@@ -245,6 +245,18 @@ class Agence:
         vehicule.changer_etat("disponible")
         return montant_final
 
+    def planifier_maintenance(self, vehicule_id, debut, fin):
+        vehicule = self.trouver_vehicule(vehicule_id)
+        if vehicule is None:
+            raise ValueError("Vehicule introuvable")
+        if fin <= debut:
+            raise ValueError("la maintenance doit durer au moins 1 jour")
+        if not self.est_disponible(vehicule_id, debut, fin):
+            raise ValueError("Vehicule non disponible sur cette periode")
+        maintenance = Maintenance(self.nouveau_id_maintenance(), vehicule_id, debut, fin)
+        self.maintenances.append(maintenance)
+        return maintenance
+
 
 
 
@@ -440,6 +452,24 @@ ag12.reserver(1,1, date(2026, 12, 1), date(2026, 12, 3))
 ag12.enregistrer_depart(2)
 try:
     ag12.enregistrer_retour(2, date(2026, 11, 30))
+except ValueError as e:
+    print("refuse :", e)
+
+ag13 = Agence()
+ag13.ajouter_client(Client(ag13.nouveau_id_client(), "Marie Joseph", "2345-5676", "HT1233"))
+ag13.ajouter_vehicule(Voiture(ag13.nouveau_id_vehicule(), "Honda", "Civic", "BB-5678", 60, 4))
+ag13.reserver(1,1, date(2026, 11, 20), date(2026, 11, 23))
+
+try:
+    ag13.planifier_maintenance(1, date(2026, 11, 21), date(2026, 11, 22))
+except ValueError as e:
+    print("refuse :", e)
+
+ag13.planifier_maintenance(1, date(2026, 11, 25), date(2026, 11, 27))
+print(len(ag13.maintenances))
+
+try:
+    ag13.reserver(1, 1, date(2026, 11, 26), date(2026, 11, 28))
 except ValueError as e:
     print("refuse :", e)
 
