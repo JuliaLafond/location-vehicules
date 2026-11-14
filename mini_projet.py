@@ -232,6 +232,11 @@ class Agence:
             jours_retard = (date_retour - reservation.date_fin).days
             frais_retard = jours_retard *vehicule.obtenir_tarif()*2
             montant_final= reservation.montant + frais_retard
+        elif date_retour < reservation.date_fin:
+            jours_utilises = (date_retour - reservation.date_debut).days
+            if jours_utilises < 1:
+                jours_utilises = 1
+            montant_final = vehicule.calculer_cout(jours_utilises)
 
         reservation.date_retour = date_retour
         reservation.frais_retard = frais_retard
@@ -421,3 +426,20 @@ ag11.enregistrer_depart(1)
 
 print(ag11.enregistrer_retour(1, date(2026, 11, 25)))
 print(ag11.trouver_reservation(1).frais_retard)
+
+ag12 = Agence()
+ag12.ajouter_client(Client(ag12.nouveau_id_client(), "Marie Joseph", "2345-5676", "HT1233"))
+ag12.ajouter_vehicule(Voiture(ag12.nouveau_id_vehicule(), "Honda", "Civic", "BB-5678", 60, 4))
+ag12.reserver(1,1, date(2026, 11, 20), date(2026, 11, 23))
+ag12.enregistrer_depart(1)
+
+print(ag12.enregistrer_retour(1, date(2026, 11, 21)))
+print(ag12.trouver_reservation(1).frais_retard)
+
+ag12.reserver(1,1, date(2026, 12, 1), date(2026, 12, 3))
+ag12.enregistrer_depart(2)
+try:
+    ag12.enregistrer_retour(2, date(2026, 11, 30))
+except ValueError as e:
+    print("refuse :", e)
+
