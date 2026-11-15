@@ -58,6 +58,14 @@ class Client:
         self.telephone = telephone
         self.numero_permis = numero_permis
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "nom": self.nom,
+            "telephone": self.telephone,
+            "numero_permis": self.numero_permis,
+        }
+
 class Maintenance:
     def __init__(self, id, vehicule_id, date_debut, date_fin):
         if date_fin < date_debut:
@@ -502,4 +510,7 @@ except ValueError as e:
     print("refuse :", e)
 
 print(ag14.trouver_reservation(1)._statut, ag14.trouver_vehicule(1).obtenir_etat())
+
+c = Client(1, "Marie Joseph", "2345-5676", "HT1233")
+print(c.to_dict())
 
