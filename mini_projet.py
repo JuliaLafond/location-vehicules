@@ -9,6 +9,16 @@ class Vehicule:
         self._etat = "disponible"
         self.changer_tarif(tarif_jour)
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "marque": self.marque,
+            "modele": self.modele,
+            "immatriculation": self.immatriculation,
+            "tarif_jour": self._tarif_jour,
+            "etat": self._etat,
+        }
+
     def changer_tarif(self, valeur):
         if valeur <= 0:
             raise ValueError("Le tarif doit etre positif")
@@ -514,3 +524,5 @@ print(ag14.trouver_reservation(1)._statut, ag14.trouver_vehicule(1).obtenir_etat
 c = Client(1, "Marie Joseph", "2345-5676", "HT1233")
 print(c.to_dict())
 
+v= Voiture(1, "Honda", "Civic", "BB-5678", 60, 4)
+print(v.to_dict())
