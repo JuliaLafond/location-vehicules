@@ -40,7 +40,6 @@ class Vehicule:
         return self._tarif_jour * nb_jours
 
 
-
 class Voiture(Vehicule):
     def __init__(self, id, marque, modele, immatriculation, tarif_jour, nb_portes):
         super().__init__(id, marque, modele, immatriculation, tarif_jour)
@@ -48,6 +47,13 @@ class Voiture(Vehicule):
     def calculer_cout(self,nb_jours ):
         base= super().calculer_cout(nb_jours)
         return base + 5 * nb_jours
+
+    def to_dict(self):
+        data = super().to_dict()
+        data["type"] = "voiture"
+        data["nb_portes"] = self.nb_portes
+        return data
+
 
 class Moto(Vehicule):
     def __init__(self, id, marque, modele, immatriculation, tarif_jour, cylindree):
@@ -58,6 +64,13 @@ class Moto(Vehicule):
         if nb_jours > 3:
             base = base * 0.9
         return base
+
+    def to_dict(self):
+        data = super().to_dict()
+        data["type"] = "moto"
+        data["cylindree"] = self.cylindree
+        return data
+
 
 class Client:
     def __init__(self, id, nom, telephone, numero_permis):
@@ -526,3 +539,6 @@ print(c.to_dict())
 
 v= Voiture(1, "Honda", "Civic", "BB-5678", 60, 4)
 print(v.to_dict())
+
+m=Moto(2, "Yamaha", "R3", "MM-1234", 40,300)
+print(m.to_dict())
