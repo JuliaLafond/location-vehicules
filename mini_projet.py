@@ -98,6 +98,14 @@ class Maintenance:
         self.date_debut = date_debut
         self.date_fin = date_fin
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "vehicule_id": self.vehicule_id,
+            "date_debut": self.date_debut.isoformat(),
+            "date_fin" : self.date_fin.isoformat(),
+        }
+
 class Reservation:
     STATUTS = ("confirmee", "en cours", "terminee", "annulee")
     def __init__(self, id, client_id, vehicule_id, date_debut, date_fin, montant):
@@ -542,3 +550,6 @@ print(v.to_dict())
 
 m=Moto(2, "Yamaha", "R3", "MM-1234", 40,300)
 print(m.to_dict())
+
+mt = Maintenance(1,1, date(2026, 11, 25), date(2026, 11, 27))
+print(mt.to_dict())
