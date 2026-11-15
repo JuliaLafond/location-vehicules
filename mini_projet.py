@@ -473,3 +473,33 @@ try:
 except ValueError as e:
     print("refuse :", e)
 
+ag14 = Agence()
+ag14.ajouter_client(Client(ag14.nouveau_id_client(), "Marie Joseph", "2345-5676", "HT1233"))
+ag14.ajouter_vehicule(Voiture(ag14.nouveau_id_vehicule(), "Honda", "Civic", "BB-5678", 60, 4))
+
+ag14.reserver(1,1, date(2026, 11, 20), date(2026, 11, 23))
+print(ag14.trouver_reservation(1)._statut, ag14.trouver_vehicule(1).obtenir_etat())
+
+ag14.enregistrer_depart(1)
+print(ag14.trouver_reservation(1)._statut, ag14.trouver_vehicule(1).obtenir_etat())
+
+print(ag14.enregistrer_retour(1, date(2026, 11, 23)))
+print(ag14.trouver_reservation(1)._statut, ag14.trouver_vehicule(1).obtenir_etat())
+
+try:
+    ag14.enregistrer_depart(1)
+except ValueError as e:
+    print("refuse :", e)
+
+try:
+    ag14.enregistrer_retour(1, date(2026, 11, 24))
+except ValueError as e:
+    print("refuse :", e)
+
+try:
+    ag14.annuler(1, date(2026, 11, 14))
+except ValueError as e:
+    print("refuse :", e)
+
+print(ag14.trouver_reservation(1)._statut, ag14.trouver_vehicule(1).obtenir_etat())
+
