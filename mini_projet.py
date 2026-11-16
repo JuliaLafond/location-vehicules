@@ -1,3 +1,4 @@
+import json
 from datetime import date
 class Vehicule:
     def __init__(self, id, marque, modele, immatriculation, tarif_jour):
@@ -188,6 +189,10 @@ class Agence:
             "prochain_id_maintenance": self.prochain_id_maintenance,
 
         }
+
+    def sauvegarder(self, nom_fichier="agence.json"):
+        with open(nom_fichier, "w", encoding="utf-8") as f:
+            json.dump(self.to_dict(), f, indent=4, ensure_ascii=False)
 
     def ajouter_client(self, client):
         self.clients.append(client)
@@ -605,3 +610,5 @@ r=ag15.reserver(1,1, date(2026, 11, 20), date(2026, 11, 23))
 print(r.to_dict())
 
 print(ag15.to_dict())
+
+ag15.sauvegarder()
