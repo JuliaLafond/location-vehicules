@@ -123,6 +123,25 @@ class Reservation:
         self.frais_retard= 0
         self.montant_final= None
 
+    def to_dict(self):
+        if self.date_retour is None :
+            retour = None
+        else:
+            retour = self.date_retour.isoformat()
+        return{
+            "id": self.id,
+            "client_id": self.client_id,
+            "vehicule_id": self.vehicule_id,
+            "date_debut": self.date_debut.isoformat(),
+            "date_fin": self.date_fin.isoformat(),
+            "montant": self.montant,
+            "statut": self._statut,
+            "montant_rembourse": self.montant_rembourse,
+            "date_retour": retour,
+            "frais_retard": self.frais_retard,
+            "montant_final": self.montant_final,
+        }
+
     def changer_statut(self, nouveau_statut):
         if nouveau_statut not in self.STATUTS:
             raise ValueError("Statut invalide")
@@ -144,6 +163,31 @@ class Agence:
         self.prochain_id_vehicule = 1
         self.prochain_id_reservation = 1
         self.prochain_id_maintenance = 1
+
+    def to_dict(self):
+        fiche_clients = []
+        for c in self.clients:
+            fiche_clients.append(c.to_dict())
+        fiche_vehicules = []
+        for v in self.vehicules:
+            fiche_vehicules.append(v.to_dict())
+        fiches_reservations = []
+        for r in self.reservations:
+            fiches_reservations.append(r.to_dict())
+        fiches_maintenances = []
+        for m in self.maintenances:
+            fiches_maintenances.append(m.to_dict())
+        return {
+            "clients": fiche_clients,
+            "vehicules": fiche_vehicules,
+            "reservations": fiches_reservations,
+            "maintenances": fiches_maintenances,
+            "prochain_id_client": self.prochain_id_client,
+            "prochain_id_vehicule": self.prochain_id_vehicule,
+            "prochain_id_reservation": self.prochain_id_reservation,
+            "prochain_id_maintenance": self.prochain_id_maintenance,
+
+        }
 
     def ajouter_client(self, client):
         self.clients.append(client)
@@ -553,3 +597,11 @@ print(m.to_dict())
 
 mt = Maintenance(1,1, date(2026, 11, 25), date(2026, 11, 27))
 print(mt.to_dict())
+
+ag15 = Agence()
+ag15.ajouter_client(Client(ag15.nouveau_id_client(), "Marie Joseph", "2345-5676", "HT1233"))
+ag15.ajouter_vehicule(Voiture(ag15.nouveau_id_vehicule(), "Honda", "civic", "BB-5678", 60, 4))
+r=ag15.reserver(1,1, date(2026, 11, 20), date(2026, 11, 23))
+print(r.to_dict())
+
+print(ag15.to_dict())
