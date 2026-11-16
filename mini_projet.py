@@ -110,6 +110,15 @@ class Maintenance:
             "date_fin" : self.date_fin.isoformat(),
         }
 
+    @staticmethod
+    def from_dict(d):
+        return Maintenance(
+            d["id"],
+            d["vehicule_id"],
+            date.fromisoformat(d["date_debut"]),
+            date.fromisoformat(d["date_fin"]),
+        )
+
 class Reservation:
     STATUTS = ("confirmee", "en cours", "terminee", "annulee")
     def __init__(self, id, client_id, vehicule_id, date_debut, date_fin, montant):
@@ -619,3 +628,7 @@ ag15.sauvegarder()
 fiche = {"id":1, "nom": "Marie Joseph", "telephone": "2345-5676", "numero_permis": "HT1233"}
 c2 = Client.from_dict(fiche)
 print(c2.nom, c2.id)
+
+fiche_m = {"id":1, "vehicule_id": 1, "date_debut": "2026-11-25", "date_fin": "2026-11-27"}
+m2= Maintenance.from_dict(fiche_m)
+print(m2.id, m2.date_debut, m2.date_fin)
