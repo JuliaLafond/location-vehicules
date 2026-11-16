@@ -89,6 +89,9 @@ class Client:
             "telephone": self.telephone,
             "numero_permis": self.numero_permis,
         }
+    @staticmethod
+    def from_dict(d):
+        return Client(d["id"], d["nom"], d["telephone"], d["numero_permis"])
 
 class Maintenance:
     def __init__(self, id, vehicule_id, date_debut, date_fin):
@@ -612,3 +615,7 @@ print(r.to_dict())
 print(ag15.to_dict())
 
 ag15.sauvegarder()
+
+fiche = {"id":1, "nom": "Marie Joseph", "telephone": "2345-5676", "numero_permis": "HT1233"}
+c2 = Client.from_dict(fiche)
+print(c2.nom, c2.id)
