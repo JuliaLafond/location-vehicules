@@ -20,6 +20,19 @@ class Vehicule:
             "etat": self._etat,
         }
 
+    @staticmethod
+    def from_dict(d):
+        if d["type"] == "voiture":
+            v= Voiture(d["id"], d["marque"], d["modele"],
+                       d["immatriculation"], d["tarif_jour"], d["nb_portes"])
+        elif d["type"] == "moto":
+            v= Moto(d["id"], d["marque"], d["modele"], d["immatriculation"],
+                    d["tarif_jour"], d["cylindree"])
+        else:
+            raise ValueError("Type de vehicule invalide")
+        v.changer_etat(d["etat"])
+        return v
+
     def changer_tarif(self, valeur):
         if valeur <= 0:
             raise ValueError("Le tarif doit etre positif")
@@ -632,3 +645,13 @@ print(c2.nom, c2.id)
 fiche_m = {"id":1, "vehicule_id": 1, "date_debut": "2026-11-25", "date_fin": "2026-11-27"}
 m2= Maintenance.from_dict(fiche_m)
 print(m2.id, m2.date_debut, m2.date_fin)
+
+fiche_v = {"id": 1, "marque": "Honda", "modele": "Civic", "immatriculation": "MM-1234", "tarif_jour": 60,
+          "etat": "loue", "type": "voiture", "nb_portes":4}
+v2 = Vehicule.from_dict(fiche_v)
+print(v2.marque,v2.obtenir_etat(), v2.nb_portes, v2.immatriculation)
+
+fiche_mo = {"id":1, "marque": "yamaha", "modele": "R3", "immatriculation": "MM-1234", "tarif_jour":40,
+            "etat": "disponible", "type": "moto", "cylindree": 300}
+m3= Vehicule.from_dict(fiche_mo)
+print(m3.marque, m3.cylindree)
