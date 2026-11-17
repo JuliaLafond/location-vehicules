@@ -237,6 +237,10 @@ class Agence:
         self.clients = []
         for fiche in d["clients"]:
             self.clients.append(Client.from_dict(fiche))
+        self.vehicules = []
+        for fiche in d["vehicules"]:
+            self.vehicules.append(Vehicule.from_dict(fiche))
+
 
     def ajouter_client(self, client):
         self.clients.append(client)
@@ -696,3 +700,4 @@ print(list(d.keys()))
 ag16 = Agence()
 ag16.charger()
 print(len(ag16.clients), ag16.clients[0].nom)
+print(len(ag16.vehicules), ag16.vehicules[0].marque)
