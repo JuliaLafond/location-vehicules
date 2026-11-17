@@ -168,6 +168,18 @@ class Reservation:
             "montant_final": self.montant_final,
         }
 
+    @staticmethod
+    def from_dict(d):
+        r = Reservation(d["id"], d["client_id"], d["vehicule_id"],
+                        date.fromisoformat(d["date_debut"]), date.fromisoformat(d["date_fin"]),d["montant"])
+        r.changer_statut(d["statut"])
+        r.montant_rembourse = d["montant_rembourse"]
+        if d["date_retour"] is not None:
+            r.date_retour = date.fromisoformat(d["date_retour"])
+        r.frais_retard = d["frais_retard"]
+        r.montant_final = d["montant_final"]
+        return r
+
     def changer_statut(self, nouveau_statut):
         if nouveau_statut not in self.STATUTS:
             raise ValueError("Statut invalide")
@@ -655,3 +667,15 @@ fiche_mo = {"id":1, "marque": "yamaha", "modele": "R3", "immatriculation": "MM-1
             "etat": "disponible", "type": "moto", "cylindree": 300}
 m3= Vehicule.from_dict(fiche_mo)
 print(m3.marque, m3.cylindree)
+
+fiche_r = {"id": 1, "client_id":1, "vehicule_id": 1, "date_debut": "2026-11-20", "date_fin": "2026-11-23",
+           "montant": 195, "statut": "terminee", "montant_rembourse": 0, "date_retour": "2026-11-25", "frais_retard": 240,
+           "montant_final": 435}
+r2 = Reservation.from_dict(fiche_r)
+print(r2.id, r2._statut, r2.date_retour, r2.montant_final)
+
+fiche_r3 = {"id": 2, "client_id":1, "vehicule_id": 1, "date_debut": "2026-12-01", "date_fin": "2026-12-03",
+           "montant": 130, "statut": "confirmee", "montant_rembourse": 0, "date_retour": None, "frais_retard": 0,
+           "montant_final": None}
+r3 = Reservation.from_dict(fiche_r3)
+print(r3._statut, r3.date_retour, r3.montant_final)
