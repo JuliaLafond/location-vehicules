@@ -247,6 +247,11 @@ class Agence:
         for fiche in d["maintenances"]:
             self.maintenances.append(Maintenance.from_dict(fiche))
 
+        self.prochain_id_client = d["prochain_id_client"]
+        self.prochain_id_vehicule = d["prochain_id_vehicule"]
+        self.prochain_id_reservation = d["prochain_id_reservation"]
+        self.prochain_id_maintenance = d["prochain_id_maintenance"]
+
 
     def ajouter_client(self, client):
         self.clients.append(client)
@@ -708,3 +713,5 @@ ag16.charger()
 print(len(ag16.clients), ag16.clients[0].nom)
 print(len(ag16.vehicules), ag16.vehicules[0].marque)
 print(len(ag16.reservations), len(ag16.maintenances))
+
+print(ag16.prochain_id_client, ag16.prochain_id_vehicule)
