@@ -259,6 +259,15 @@ class Agence:
         self.prochain_id_maintenance = d["prochain_id_maintenance"]
         return True
 
+    def compter_par_statut(self):
+        compte = {}
+        for r in self.reservations:
+            if r._statut in compte:
+                compte[r._statut] += 1
+            else:
+                compte[r._statut] = 1
+        return compte
+
 
     def ajouter_client(self, client):
         self.clients.append(client)
@@ -735,3 +744,5 @@ try:
     ag18.charger("casse.json")
 except ValueError as e:
     print("refuse :", e)
+
+print(ag16.compter_par_statut())
