@@ -231,6 +231,13 @@ class Agence:
         with open(nom_fichier, "w", encoding="utf-8") as f:
             json.dump(self.to_dict(), f, indent=4, ensure_ascii=False)
 
+    def charger(self, nom_fichier="agence.json"):
+        with open(nom_fichier, "r", encoding="utf-8") as f:
+            d = json.load(f)
+        self.clients = []
+        for fiche in d["clients"]:
+            self.clients.append(Client.from_dict(fiche))
+
     def ajouter_client(self, client):
         self.clients.append(client)
 
@@ -381,6 +388,8 @@ class Agence:
         maintenance = Maintenance(self.nouveau_id_maintenance(), vehicule_id, debut, fin)
         self.maintenances.append(maintenance)
         return maintenance
+
+
 
 
 
@@ -679,3 +688,11 @@ fiche_r3 = {"id": 2, "client_id":1, "vehicule_id": 1, "date_debut": "2026-12-01"
            "montant_final": None}
 r3 = Reservation.from_dict(fiche_r3)
 print(r3._statut, r3.date_retour, r3.montant_final)
+
+with open("agence.json", "r", encoding="utf-8") as f:
+    d = json.load(f)
+print(list(d.keys()))
+
+ag16 = Agence()
+ag16.charger()
+print(len(ag16.clients), ag16.clients[0].nom)
