@@ -235,8 +235,11 @@ class Agence:
     def charger(self, nom_fichier="agence.json"):
         if not os.path.exists(nom_fichier):
             return False
-        with open(nom_fichier, "r", encoding="utf-8") as f:
-            d = json.load(f)
+        try:
+            with open(nom_fichier, "r", encoding="utf-8") as f:
+                d = json.load(f)
+        except json.JSONDecodeError:
+            raise ValueError("Fichier JSON invalide")
         self.clients = []
         for fiche in d["clients"]:
             self.clients.append(Client.from_dict(fiche))
@@ -723,3 +726,12 @@ print(ag16.prochain_id_client, ag16.prochain_id_vehicule)
 ag17= Agence()
 print(ag17.charger("fichier_inexistant.json"))
 print(len(ag17.clients))
+
+with open("casse.json", "w", encoding="utf-8") as f:
+    f.write("ceci n'est pas du json")
+
+ag18 = Agence()
+try:
+    ag18.charger("casse.json")
+except ValueError as e:
+    print("refuse :", e)
