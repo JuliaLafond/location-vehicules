@@ -457,6 +457,28 @@ def saisir_client(agence):
     agence.ajouter_client(client)
     print("Client ajoute , numero",client.id)
 
+def saisir_vehicule(agence):
+    type_v = input("type (1 = Voiture, 2= Moto) :")
+    if type_v != "1" and type_v != "2":
+        print("Type invalide")
+        return
+    marque = input("Entrez la Marque: ")
+    modele = input("Entrez le modele: ")
+    immat = input("Entrez l'immatriculation: ")
+    try :
+        tarif = float(input("Tarif par Jour: "))
+        if type_v == "1":
+            nb_portes = int(input("Nombre de portes: "))
+            v = Voiture(agence.nouveau_id_vehicule(),marque, modele, immat, tarif, nb_portes)
+        else:
+            cylindree = int (input("Cylindre: "))
+            v = Moto(agence.nouveau_id_vehicule(), marque, modele, immat, tarif, cylindree)
+    except ValueError:
+        print("Valeur invalide, vehicule non ajoute")
+        return
+    agence.ajouter_vehicule(v)
+    print("Vehicule ajoute , numero",v.id)
+
 
 def afficher_menu():
     print("=== Agence de location ===")
@@ -465,6 +487,7 @@ def afficher_menu():
     print("3. Locations par vehicules")
     print("4. vehicule le plus loue")
     print("5. Ajouter un client")
+    print("6. Ajouter un vehicule")
     print("0. Quitter")
 
 def menu_principal(agence):
@@ -481,6 +504,8 @@ def menu_principal(agence):
             print(agence.vehicule_le_plus_loue())
         elif choix == "5":
             saisir_client(agence)
+        elif choix == "6":
+            saisir_vehicule(agence)
         elif choix == "0":
             print("Au revoir")
             break
