@@ -275,6 +275,15 @@ class Agence:
                 total += r.montant_final
         return total
 
+    def compter_locations_par_vehicule(self):
+        compte = {}
+        for r in self.reservations:
+            if r._statut != "annulee":
+                if r.vehicule_id in compte:
+                    compte[r.vehicule_id] +=1
+                else:
+                    compte[r.vehicule_id] = 1
+        return compte
 
     def ajouter_client(self, client):
         self.clients.append(client)
@@ -316,7 +325,7 @@ class Agence:
         for v in self.vehicules:
             if v.id == vehicule_id:
                 return v
-            return None
+        return None
 
     def trouver_client(self, client_id):
         for c in self.clients:
@@ -758,3 +767,8 @@ ag19 = Agence()
 ag19.reservations.append(r2)
 ag19.reservations.append(r3)
 print(ag19.calculer_revenus())
+
+ag21 = Agence()
+ag21.reservations.append(r2)
+ag21.reservations.append(r3)
+print(ag21.compter_locations_par_vehicule())
