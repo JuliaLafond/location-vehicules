@@ -268,6 +268,13 @@ class Agence:
                 compte[r._statut] = 1
         return compte
 
+    def calculer_revenus(self):
+        total = 0
+        for r in self.reservations:
+            if r.montant_final is not None :
+                total += r.montant_final
+        return total
+
 
     def ajouter_client(self, client):
         self.clients.append(client)
@@ -746,3 +753,8 @@ except ValueError as e:
     print("refuse :", e)
 
 print(ag16.compter_par_statut())
+
+ag19 = Agence()
+ag19.reservations.append(r2)
+ag19.reservations.append(r3)
+print(ag19.calculer_revenus())
