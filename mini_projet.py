@@ -285,6 +285,16 @@ class Agence:
                     compte[r.vehicule_id] = 1
         return compte
 
+    def vehicule_le_plus_loue(self):
+        compte = self.compter_locations_par_vehicule()
+        meilleur_id = None
+        meilleur_total = 0
+        for vehicule_id in compte :
+            if compte[vehicule_id] > meilleur_total:
+                meilleur_total = compte[vehicule_id]
+                meilleur_id = vehicule_id
+        return meilleur_id
+
     def ajouter_client(self, client):
         self.clients.append(client)
 
@@ -772,3 +782,11 @@ ag21 = Agence()
 ag21.reservations.append(r2)
 ag21.reservations.append(r3)
 print(ag21.compter_locations_par_vehicule())
+
+ag22 = Agence()
+print(ag22.vehicule_le_plus_loue())
+r4 = Reservation(9,1,2, date(2026, 12, 10), date(2026, 12, 12), 130)
+ag22.reservations.append(r2)
+ag22.reservations.append(r3)
+ag22.reservations.append(r4)
+print(ag22.vehicule_le_plus_loue())
