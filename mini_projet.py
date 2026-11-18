@@ -446,6 +446,12 @@ class Agence:
         self.maintenances.append(maintenance)
         return maintenance
 
+def afficher_menu():
+    print("=== Agence de location ===")
+    print("1. Voir les statistiques")
+    print("0. Quitter")
+
+
 
 
 
@@ -790,3 +796,5 @@ ag22.reservations.append(r2)
 ag22.reservations.append(r3)
 ag22.reservations.append(r4)
 print(ag22.vehicule_le_plus_loue())
+
+afficher_menu()
