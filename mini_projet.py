@@ -238,25 +238,33 @@ class Agence:
         try:
             with open(nom_fichier, "r", encoding="utf-8") as f:
                 d = json.load(f)
-        except json.JSONDecodeError:
+            clients = []
+            for fiche in d["clients"]:
+                clients.append(Client.from_dict(fiche))
+            vehicules = []
+            for fiche in d["vehicules"]:
+                vehicules.append(Vehicule.from_dict(fiche))
+            reservations = []
+            for fiche in d["reservations"]:
+                reservations.append(Reservation.from_dict(fiche))
+            maintenances = []
+            for fiche in d["maintenances"]:
+                maintenances.append(Maintenance.from_dict(fiche))
+            id_client = d["prochain_id_client"]
+            id_vehicule = d["prochain_id_vehicule"]
+            id_reservation = d["prochain_id_reservation"]
+            id_maintenance = d["prochain_id_maintenance"]
+        except (KeyError, TypeError, ValueError):
             raise ValueError("Fichier JSON invalide")
-        self.clients = []
-        for fiche in d["clients"]:
-            self.clients.append(Client.from_dict(fiche))
-        self.vehicules = []
-        for fiche in d["vehicules"]:
-            self.vehicules.append(Vehicule.from_dict(fiche))
-        self.reservations = []
-        for fiche in d["reservations"]:
-            self.reservations.append(Reservation.from_dict(fiche))
-        self.maintenances = []
-        for fiche in d["maintenances"]:
-            self.maintenances.append(Maintenance.from_dict(fiche))
 
-        self.prochain_id_client = d["prochain_id_client"]
-        self.prochain_id_vehicule = d["prochain_id_vehicule"]
-        self.prochain_id_reservation = d["prochain_id_reservation"]
-        self.prochain_id_maintenance = d["prochain_id_maintenance"]
+        self.clients = clients
+        self.vehicules = vehicules
+        self.reservations = reservations
+        self.maintenances = maintenances
+        self.prochain_id_client = id_client
+        self.prochain_id_vehicule = id_vehicule
+        self.prochain_id_reservation = id_reservation
+        self.prochain_id_maintenance = id_maintenance
         return True
 
     def compter_par_statut(self):
@@ -515,9 +523,15 @@ def menu_principal(agence):
 
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     agence = Agence()
-    menu_principal(agence)
+    try:
+        agence.charger()
+    except ValueError as e:
+        print("Erreur :", e)
+        print("Le fichier agence.json est invalide. Corrigez-le ou renommez-le, puis relancez.")
+    else:
+        menu_principal(agence)
 
 
 
