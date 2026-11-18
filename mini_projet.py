@@ -229,8 +229,13 @@ class Agence:
         }
 
     def sauvegarder(self, nom_fichier="agence.json"):
-        with open(nom_fichier, "w", encoding="utf-8") as f:
+        temporaire = nom_fichier + ".tmp"
+        with open(temporaire, "w", encoding="utf-8") as f:
             json.dump(self.to_dict(), f, indent=4, ensure_ascii=False)
+        os.replace(temporaire, nom_fichier)
+
+    def _modifie(self):
+        self.sauvegarder(self.fichier)
 
     def charger(self, nom_fichier="agence.json"):
         if not os.path.exists(nom_fichier):
@@ -265,6 +270,7 @@ class Agence:
         self.prochain_id_vehicule = id_vehicule
         self.prochain_id_reservation = id_reservation
         self.prochain_id_maintenance = id_maintenance
+        self.fichier = "agence.json"
         return True
 
     def compter_par_statut(self):
@@ -305,9 +311,11 @@ class Agence:
 
     def ajouter_client(self, client):
         self.clients.append(client)
+        self._modifie()
 
     def ajouter_vehicule(self, vehicule):
         self.vehicules.append(vehicule)
+        self._modifie()
 
     def nouveau_id_client(self):
         id_donne = self.prochain_id_client
@@ -357,7 +365,6 @@ class Agence:
                 return r
         return None
 
-
     def est_disponible(self, vehicule_id, debut,fin):
         for r in self.reservations:
             if r.vehicule_id == vehicule_id and r._statut != "annulee" :
@@ -385,6 +392,7 @@ class Agence:
         montant = vehicule.calculer_cout(nb_jours)
         reservation = Reservation(self.nouveau_id_reservation(), client_id, vehicule_id, debut, fin, montant)
         self.reservations.append(reservation)
+        self._modifie()
         return reservation
 
     def annuler(self, reservation_id, aujourdhui):
@@ -399,6 +407,7 @@ class Agence:
             remboursement = 0
         reservation.changer_statut("annulee")
         reservation.montant_rembourse = remboursement
+        self._modifie()
         return remboursement
 
     def enregistrer_depart(self, reservation_id):
@@ -412,6 +421,7 @@ class Agence:
             raise ValueError("Le vehicule n'est pas disponible pour le depart")
         reservation.changer_statut("en cours")
         vehicule.changer_etat("loue")
+        self._modifie()
 
     def enregistrer_retour(self, reservation_id, date_retour):
         reservation = self.trouver_reservation(reservation_id)
@@ -440,6 +450,7 @@ class Agence:
         reservation.montant_final = montant_final
         reservation.changer_statut("terminee")
         vehicule.changer_etat("disponible")
+        self._modifie()
         return montant_final
 
     def planifier_maintenance(self, vehicule_id, debut, fin):
@@ -452,6 +463,7 @@ class Agence:
             raise ValueError("Vehicule non disponible sur cette periode")
         maintenance = Maintenance(self.nouveau_id_maintenance(), vehicule_id, debut, fin)
         self.maintenances.append(maintenance)
+        self._modifie()
         return maintenance
 
 def saisir_client(agence):
