@@ -446,12 +446,25 @@ class Agence:
         self.maintenances.append(maintenance)
         return maintenance
 
+def saisir_client(agence):
+    nom = input("Nom du client: ")
+    if nom.strip() == "":
+        print("Le nom ne peut pas etre vide")
+        return
+    telephone = input("Entrez votre numero de telephone: ")
+    permis = input("Entrez votre numero de permis: ")
+    client = Client(agence.nouveau_id_client(), nom, telephone, permis)
+    agence.ajouter_client(client)
+    print("Client ajoute , numero",client.id)
+
+
 def afficher_menu():
     print("=== Agence de location ===")
     print("1. Reservation par statut")
     print("2. Revenus")
     print("3. Locations par vehicules")
     print("4. vehicule le plus loue")
+    print("5. Ajouter un client")
     print("0. Quitter")
 
 def menu_principal(agence):
@@ -466,6 +479,8 @@ def menu_principal(agence):
             print(agence.compter_locations_par_vehicule())
         elif choix == "4":
             print(agence.vehicule_le_plus_loue())
+        elif choix == "5":
+            saisir_client(agence)
         elif choix == "0":
             print("Au revoir")
             break
