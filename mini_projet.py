@@ -448,7 +448,10 @@ class Agence:
 
 def afficher_menu():
     print("=== Agence de location ===")
-    print("1. Voir les statistiques")
+    print("1. Reservation par statut")
+    print("2. Revenus")
+    print("3. Locations par vehicules")
+    print("4. vehicule le plus loue")
     print("0. Quitter")
 
 def menu_principal(agence):
@@ -457,6 +460,12 @@ def menu_principal(agence):
         choix = input("Votre choix : ")
         if choix == "1":
             print(agence.compter_par_statut())
+        elif choix == "2":
+            print(agence.calculer_revenus())
+        elif choix == "3":
+            print(agence.compter_locations_par_vehicule())
+        elif choix == "4":
+            print(agence.vehicule_le_plus_loue())
         elif choix == "0":
             print("Au revoir")
             break
