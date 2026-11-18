@@ -451,6 +451,18 @@ def afficher_menu():
     print("1. Voir les statistiques")
     print("0. Quitter")
 
+def menu_principal(agence):
+    while True:
+        afficher_menu()
+        choix = input("Votre choix : ")
+        if choix == "1":
+            print(agence.compter_par_statut())
+        elif choix == "0":
+            print("Au revoir")
+            break
+        else:
+            print("Choix invalide")
+
 
 
 
@@ -798,3 +810,4 @@ ag22.reservations.append(r4)
 print(ag22.vehicule_le_plus_loue())
 
 afficher_menu()
+menu_principal(ag16)
