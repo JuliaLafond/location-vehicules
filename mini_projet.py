@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import date
+from datetime import date, datetime
 class Vehicule:
     def __init__(self, id, marque, modele, immatriculation, tarif_jour):
         self.id = id
@@ -194,10 +194,12 @@ def tarif_du_vehicule(v):
 
 class Agence:
     def __init__(self):
+        self.fichier = "agence.json"
         self.vehicules = []
         self.clients = []
         self.reservations = []
         self.maintenances = []
+        self.historique = []
         self.prochain_id_client = 1
         self.prochain_id_vehicule = 1
         self.prochain_id_reservation = 1
@@ -225,6 +227,7 @@ class Agence:
             "prochain_id_vehicule": self.prochain_id_vehicule,
             "prochain_id_reservation": self.prochain_id_reservation,
             "prochain_id_maintenance": self.prochain_id_maintenance,
+            "historique": self.historique,
 
         }
 
@@ -236,6 +239,13 @@ class Agence:
 
     def _modifie(self):
         self.sauvegarder(self.fichier)
+
+    def journaliser(self,operation,details):
+        self.historique.append({
+            "date":datetime.now().isoformat(sep=" ",timespec="seconds"),
+            "operation": operation,
+            "details":details,
+        })
 
     def charger(self, nom_fichier="agence.json"):
         if not os.path.exists(nom_fichier):
@@ -259,6 +269,7 @@ class Agence:
             id_vehicule = d["prochain_id_vehicule"]
             id_reservation = d["prochain_id_reservation"]
             id_maintenance = d["prochain_id_maintenance"]
+            historique = d.get("historique",[])
         except (KeyError, TypeError, ValueError):
             raise ValueError("Fichier JSON invalide")
 
@@ -270,7 +281,7 @@ class Agence:
         self.prochain_id_vehicule = id_vehicule
         self.prochain_id_reservation = id_reservation
         self.prochain_id_maintenance = id_maintenance
-        self.fichier = "agence.json"
+        self.historique = historique
         return True
 
     def compter_par_statut(self):
@@ -311,10 +322,12 @@ class Agence:
 
     def ajouter_client(self, client):
         self.clients.append(client)
+        self.journaliser("Ajout client", f"client {client.id}: {client.nom}")
         self._modifie()
 
     def ajouter_vehicule(self, vehicule):
         self.vehicules.append(vehicule)
+        self.journaliser("Ajout vehicule", f" Vehicule {vehicule.id}: {vehicule.marque} {vehicule.modele}")
         self._modifie()
 
     def nouveau_id_client(self):
@@ -392,6 +405,8 @@ class Agence:
         montant = vehicule.calculer_cout(nb_jours)
         reservation = Reservation(self.nouveau_id_reservation(), client_id, vehicule_id, debut, fin, montant)
         self.reservations.append(reservation)
+        self.journaliser("Reservation",f"reservation {reservation.id}: client {client.id}, vehicule {vehicule.id}"
+                                       f" du {debut} au {fin}, montant {montant}")
         self._modifie()
         return reservation
 
@@ -407,6 +422,7 @@ class Agence:
             remboursement = 0
         reservation.changer_statut("annulee")
         reservation.montant_rembourse = remboursement
+        self.journaliser("Annulation", f"reservation {reservation_id}, remboursement {remboursement}")
         self._modifie()
         return remboursement
 
@@ -421,6 +437,7 @@ class Agence:
             raise ValueError("Le vehicule n'est pas disponible pour le depart")
         reservation.changer_statut("en cours")
         vehicule.changer_etat("loue")
+        self.journaliser("Depart",f"reservation {reservation_id}")
         self._modifie()
 
     def enregistrer_retour(self, reservation_id, date_retour):
@@ -450,6 +467,8 @@ class Agence:
         reservation.montant_final = montant_final
         reservation.changer_statut("terminee")
         vehicule.changer_etat("disponible")
+        self.journaliser("Retour",f"reservation {reservation_id}, retour le {date_retour}, "
+                                  f"frais de retard {frais_retard}, total {montant_final}")
         self._modifie()
         return montant_final
 
@@ -463,6 +482,7 @@ class Agence:
             raise ValueError("Vehicule non disponible sur cette periode")
         maintenance = Maintenance(self.nouveau_id_maintenance(), vehicule_id, debut, fin)
         self.maintenances.append(maintenance)
+        self.journaliser("Maintenance",f"maintenance {maintenance.id}: vehicule {vehicule_id}, du {debut} au {fin}")
         self._modifie()
         return maintenance
 
