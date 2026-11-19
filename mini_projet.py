@@ -192,6 +192,9 @@ class Reservation:
 def tarif_du_vehicule(v):
     return v.obtenir_tarif()
 
+def marque_du_vehicule(v):
+    return v.marque.lower()
+
 class Agence:
     def __init__(self):
         self.fichier = "agence.json"
@@ -377,6 +380,9 @@ class Agence:
 
     def trier_par_tarif(self):
         return sorted(self.vehicules, key=tarif_du_vehicule)
+
+    def trier_par_marque(self):
+        return sorted(self.vehicules, key=marque_du_vehicule)
 
     def trouver_vehicule(self, vehicule_id):
         for v in self.vehicules:
@@ -626,6 +632,22 @@ def saisir_recherche(agence):
     for v in resultat:
         print(v.id, v.marque, v.modele, v.immatriculation, v.obtenir_tarif())
 
+def afficher_vehicules(liste):
+    if len(liste) == 0:
+        print("Aucun vehicule")
+    for v in liste:
+        print(v.id, v.marque, v.modele, v.immatriculation, v.obtenir_tarif(), v.obtenir_etat())
+
+
+def saisir_tri(agence):
+    choix = input("Trier par (1 = tarif, 2 = marque) : ")
+    if choix == "1":
+        afficher_vehicules(agence.trier_par_tarif())
+    elif choix == "2":
+        afficher_vehicules(agence.trier_par_marque())
+    else:
+        print("Choix invalide")
+
 
 
 def afficher_menu():
@@ -642,6 +664,7 @@ def afficher_menu():
     print("10.Enregistrer un retour")
     print("11.Enregistrer une maintenance")
     print("12.Rechercher les vehicules disponibles")
+    print("13.Lister les vehicules (avec tri)")
     print("0. Quitter")
 
 def menu_principal(agence):
@@ -672,6 +695,8 @@ def menu_principal(agence):
             saisir_maintenace(agence)
         elif choix == "12":
             saisir_recherche(agence)
+        elif choix == "13":
+            saisir_tri(agence)
         elif choix == "0":
             print("Au revoir")
             break
