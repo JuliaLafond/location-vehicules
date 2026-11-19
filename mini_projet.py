@@ -673,6 +673,12 @@ def saisir_retards(agence):
     for r, jours in retards:
         print("Reservation", r.id, "- vehicule", r.vehicule_id, "-", jours, "jour(s) de retard -", r._statut)
 
+def afficher_historique(agence):
+    if len(agence.historique) == 0:
+        print("Historique vide")
+    for entree in agence.historique:
+        print(entree["date"], "-", entree["operation"],"-", entree["details"])
+
 
 
 def afficher_menu():
@@ -691,6 +697,7 @@ def afficher_menu():
     print("12.Rechercher les vehicules disponibles")
     print("13.Lister les vehicules (avec tri)")
     print("14.Voir les retards")
+    print("15.Voir l'historique")
     print("0. Quitter")
 
 def menu_principal(agence):
@@ -725,6 +732,8 @@ def menu_principal(agence):
             saisir_tri(agence)
         elif choix == "14":
             saisir_retards(agence)
+        elif choix == "15":
+            afficher_historique(agence)
         elif choix == "0":
             print("Au revoir")
             break
