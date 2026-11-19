@@ -357,6 +357,24 @@ class Agence:
                 resultat.append(v)
         return resultat
 
+    def rechercher_disponibles(self,debut,fin, type_v=None, marque=None,tarif_max=None):
+        if fin <= debut:
+            raise ValueError("La periode doit durer au moins 1 jour")
+        resultat = []
+        for v in self.vehicules:
+            if not self.est_disponible(v.id,debut,fin):
+                continue
+            if type_v == "voiture" and not isinstance(v,Voiture):
+                continue
+            if type_v == "moto" and not isinstance(v,Moto):
+                continue
+            if marque is not None and v.marque.lower() != marque.lower():
+                continue
+            if tarif_max is not None and v.obtenir_tarif()>tarif_max:
+                continue
+            resultat.append(v)
+        return resultat
+
     def trier_par_tarif(self):
         return sorted(self.vehicules, key=tarif_du_vehicule)
 
@@ -584,6 +602,30 @@ def saisir_maintenace(agence):
         return
     print("Maintenance planifiee, numero",maintenance.id)
 
+def saisir_recherche(agence):
+    try:
+        debut = saisir_date("Date de debut")
+        fin = saisir_date("Date de fin")
+        type_v = input("Type (voiture/moto, Entree pour tous) : ").strip().lower()
+        if type_v not in ("", "voiture", "moto"):
+            raise ValueError("Type invalide")
+        marque = input("Marque (Entree pour toutes) : ").strip()
+        texte_tarif = input("Tarif maximum (Entree pour aucun) : ").strip()
+        tarif_max = None
+        if texte_tarif != "":
+            try:
+                tarif_max = float(texte_tarif)
+            except ValueError:
+                raise ValueError("Le tarif maximum doit etre un nombre")
+        resultat = agence.rechercher_disponibles(debut, fin, type_v or None, marque or None, tarif_max)
+    except ValueError as e:
+        print("Refuse :", e)
+        return
+    if len(resultat) == 0:
+        print("Aucun vehicule disponible")
+    for v in resultat:
+        print(v.id, v.marque, v.modele, v.immatriculation, v.obtenir_tarif())
+
 
 
 def afficher_menu():
@@ -599,6 +641,7 @@ def afficher_menu():
     print("9. Enregistrer un depart")
     print("10.Enregistrer un retour")
     print("11.Enregistrer une maintenance")
+    print("12.Rechercher les vehicules disponibles")
     print("0. Quitter")
 
 def menu_principal(agence):
@@ -627,6 +670,8 @@ def menu_principal(agence):
             saisir_retour(agence)
         elif choix == "11":
             saisir_maintenace(agence)
+        elif choix == "12":
+            saisir_recherche(agence)
         elif choix == "0":
             print("Au revoir")
             break
