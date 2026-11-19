@@ -301,6 +301,8 @@ class Agence:
         for r in self.reservations:
             if r.montant_final is not None :
                 total += r.montant_final
+            elif r._statut == "annulee":
+                total += r.montant - r.montant_rembourse
         return total
 
     def compter_locations_par_vehicule(self):
@@ -322,6 +324,17 @@ class Agence:
                 meilleur_total = compte[vehicule_id]
                 meilleur_id = vehicule_id
         return meilleur_id
+
+    def lister_retards(self, aujourdhui):
+        retards = []
+        for r in self.reservations:
+            if r._statut == "terminee" and r.frais_retard > 0:
+                jours = (r.date_retour - r.date_fin).days
+                retards.append((r, jours))
+            elif r._statut == "en cours" and r.date_fin < aujourdhui:
+                jours = (aujourdhui - r.date_fin).days
+                retards.append((r, jours))
+        return retards
 
     def ajouter_client(self, client):
         self.clients.append(client)
@@ -648,6 +661,18 @@ def saisir_tri(agence):
     else:
         print("Choix invalide")
 
+def saisir_retards(agence):
+    try:
+        aujourdhui = saisir_date("Date du jour")
+    except ValueError as e:
+        print("Refuse :", e)
+        return
+    retards = agence.lister_retards(aujourdhui)
+    if len(retards) == 0:
+        print("Aucun retard")
+    for r, jours in retards:
+        print("Reservation", r.id, "- vehicule", r.vehicule_id, "-", jours, "jour(s) de retard -", r._statut)
+
 
 
 def afficher_menu():
@@ -665,6 +690,7 @@ def afficher_menu():
     print("11.Enregistrer une maintenance")
     print("12.Rechercher les vehicules disponibles")
     print("13.Lister les vehicules (avec tri)")
+    print("14.Voir les retards")
     print("0. Quitter")
 
 def menu_principal(agence):
@@ -697,6 +723,8 @@ def menu_principal(agence):
             saisir_recherche(agence)
         elif choix == "13":
             saisir_tri(agence)
+        elif choix == "14":
+            saisir_retards(agence)
         elif choix == "0":
             print("Au revoir")
             break
