@@ -218,3 +218,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+agence.json
+agence.json.tmp
+agence_essais.json
+casse.json

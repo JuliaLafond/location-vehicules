@@ -1,0 +1,291 @@
+{
+    "clients": [
+        {
+            "id": 1,
+            "nom": "Marie Joseph",
+            "telephone": "2345-5676",
+            "numero_permis": "HT1233"
+        },
+        {
+            "id": 2,
+            "nom": "Jean pierre",
+            "telephone": "3456-7812",
+            "numero_permis": "HT4455"
+        },
+        {
+            "id": 3,
+            "nom": "Nadege Louis",
+            "telephone": "3890-1122",
+            "numero_permis": "HT7788"
+        }
+    ],
+    "vehicules": [
+        {
+            "id": 1,
+            "marque": "Toyota",
+            "modele": "corolla",
+            "immatriculation": "AA-1234",
+            "tarif_jour": 50.0,
+            "etat": "disponible",
+            "type": "voiture",
+            "nb_portes": 4
+        },
+        {
+            "id": 2,
+            "marque": "Honda",
+            "modele": "Civic",
+            "immatriculation": "BB-5678",
+            "tarif_jour": 60.0,
+            "etat": "disponible",
+            "type": "voiture",
+            "nb_portes": 4
+        },
+        {
+            "id": 3,
+            "marque": "Yamaha",
+            "modele": "R15",
+            "immatriculation": "CC-9161",
+            "tarif_jour": 25.0,
+            "etat": "disponible",
+            "type": "moto",
+            "cylindree": 155
+        },
+        {
+            "id": 4,
+            "marque": "Honda",
+            "modele": "CB125",
+            "immatriculation": "DD-3344",
+            "tarif_jour": 22.0,
+            "etat": "loue",
+            "type": "moto",
+            "cylindree": 125
+        }
+    ],
+    "reservations": [
+        {
+            "id": 1,
+            "client_id": 1,
+            "vehicule_id": 1,
+            "date_debut": "2026-11-02",
+            "date_fin": "2026-11-05",
+            "montant": 165.0,
+            "statut": "terminee",
+            "montant_rembourse": 0,
+            "date_retour": "2026-11-05",
+            "frais_retard": 0,
+            "montant_final": 165.0
+        },
+        {
+            "id": 2,
+            "client_id": 2,
+            "vehicule_id": 2,
+            "date_debut": "2026-11-03",
+            "date_fin": "2026-11-06",
+            "montant": 195.0,
+            "statut": "terminee",
+            "montant_rembourse": 0,
+            "date_retour": "2026-11-08",
+            "frais_retard": 240.0,
+            "montant_final": 435.0
+        },
+        {
+            "id": 3,
+            "client_id": 3,
+            "vehicule_id": 3,
+            "date_debut": "2026-11-10",
+            "date_fin": "2026-11-15",
+            "montant": 112.5,
+            "statut": "terminee",
+            "montant_rembourse": 0,
+            "date_retour": "2026-11-13",
+            "frais_retard": 0,
+            "montant_final": 75.0
+        },
+        {
+            "id": 4,
+            "client_id": 1,
+            "vehicule_id": 4,
+            "date_debut": "2026-11-16",
+            "date_fin": "2026-11-19",
+            "montant": 66.0,
+            "statut": "en cours",
+            "montant_rembourse": 0,
+            "date_retour": null,
+            "frais_retard": 0,
+            "montant_final": null
+        },
+        {
+            "id": 5,
+            "client_id": 2,
+            "vehicule_id": 1,
+            "date_debut": "2026-11-25",
+            "date_fin": "2026-11-28",
+            "montant": 165.0,
+            "statut": "confirmee",
+            "montant_rembourse": 0,
+            "date_retour": null,
+            "frais_retard": 0,
+            "montant_final": null
+        },
+        {
+            "id": 6,
+            "client_id": 3,
+            "vehicule_id": 2,
+            "date_debut": "2026-11-22",
+            "date_fin": "2026-11-24",
+            "montant": 130.0,
+            "statut": "annulee",
+            "montant_rembourse": 130.0,
+            "date_retour": null,
+            "frais_retard": 0,
+            "montant_final": null
+        },
+        {
+            "id": 7,
+            "client_id": 1,
+            "vehicule_id": 3,
+            "date_debut": "2026-11-20",
+            "date_fin": "2026-11-21",
+            "montant": 25.0,
+            "statut": "annulee",
+            "montant_rembourse": 0,
+            "date_retour": null,
+            "frais_retard": 0,
+            "montant_final": null
+        }
+    ],
+    "maintenances": [
+        {
+            "id": 1,
+            "vehicule_id": 1,
+            "date_debut": "2026-12-01",
+            "date_fin": "2026-12-03"
+        }
+    ],
+    "prochain_id_client": 4,
+    "prochain_id_vehicule": 5,
+    "prochain_id_reservation": 8,
+    "prochain_id_maintenance": 2,
+    "historique": [
+        {
+            "date": "2026-11-18 21:18:00",
+            "operation": "Ajout client",
+            "details": "client 1: Marie Joseph"
+        },
+        {
+            "date": "2026-11-18 21:18:46",
+            "operation": "Ajout client",
+            "details": "client 2: Jean pierre"
+        },
+        {
+            "date": "2026-11-18 21:19:24",
+            "operation": "Ajout client",
+            "details": "client 3: Nadege Louis"
+        },
+        {
+            "date": "2026-11-18 21:20:20",
+            "operation": "Ajout vehicule",
+            "details": " Vehicule 1: Toyota corolla"
+        },
+        {
+            "date": "2026-11-18 21:21:02",
+            "operation": "Ajout vehicule",
+            "details": " Vehicule 2: Honda Civic"
+        },
+        {
+            "date": "2026-11-18 21:21:42",
+            "operation": "Ajout vehicule",
+            "details": " Vehicule 3: Yamaha R15"
+        },
+        {
+            "date": "2026-11-18 21:22:32",
+            "operation": "Ajout vehicule",
+            "details": " Vehicule 4: Honda CB125"
+        },
+        {
+            "date": "2026-11-18 21:24:01",
+            "operation": "Reservation",
+            "details": "reservation 1: client 1, vehicule 1 du 2026-11-02 au 2026-11-05, montant 165.0"
+        },
+        {
+            "date": "2026-11-18 21:24:45",
+            "operation": "Reservation",
+            "details": "reservation 2: client 2, vehicule 2 du 2026-11-03 au 2026-11-06, montant 195.0"
+        },
+        {
+            "date": "2026-11-18 21:25:13",
+            "operation": "Reservation",
+            "details": "reservation 3: client 3, vehicule 3 du 2026-11-10 au 2026-11-15, montant 112.5"
+        },
+        {
+            "date": "2026-11-18 21:26:03",
+            "operation": "Reservation",
+            "details": "reservation 4: client 1, vehicule 4 du 2026-11-16 au 2026-11-19, montant 66.0"
+        },
+        {
+            "date": "2026-11-18 21:26:32",
+            "operation": "Reservation",
+            "details": "reservation 5: client 2, vehicule 1 du 2026-11-25 au 2026-11-28, montant 165.0"
+        },
+        {
+            "date": "2026-11-18 21:26:57",
+            "operation": "Reservation",
+            "details": "reservation 6: client 3, vehicule 2 du 2026-11-22 au 2026-11-24, montant 130.0"
+        },
+        {
+            "date": "2026-11-18 21:27:17",
+            "operation": "Reservation",
+            "details": "reservation 7: client 1, vehicule 3 du 2026-11-20 au 2026-11-21, montant 25.0"
+        },
+        {
+            "date": "2026-11-18 21:28:14",
+            "operation": "Depart",
+            "details": "reservation 1"
+        },
+        {
+            "date": "2026-11-18 21:28:40",
+            "operation": "Retour",
+            "details": "reservation 1, retour le 2026-11-05, frais de retard 0, total 165.0"
+        },
+        {
+            "date": "2026-11-18 21:28:51",
+            "operation": "Depart",
+            "details": "reservation 2"
+        },
+        {
+            "date": "2026-11-18 21:29:07",
+            "operation": "Retour",
+            "details": "reservation 2, retour le 2026-11-08, frais de retard 240.0, total 435.0"
+        },
+        {
+            "date": "2026-11-18 21:29:17",
+            "operation": "Depart",
+            "details": "reservation 3"
+        },
+        {
+            "date": "2026-11-18 21:29:31",
+            "operation": "Retour",
+            "details": "reservation 3, retour le 2026-11-13, frais de retard 0, total 75.0"
+        },
+        {
+            "date": "2026-11-18 21:29:39",
+            "operation": "Depart",
+            "details": "reservation 4"
+        },
+        {
+            "date": "2026-11-18 21:30:04",
+            "operation": "Annulation",
+            "details": "reservation 6, remboursement 130.0"
+        },
+        {
+            "date": "2026-11-18 21:30:18",
+            "operation": "Annulation",
+            "details": "reservation 7, remboursement 0"
+        },
+        {
+            "date": "2026-11-18 21:31:12",
+            "operation": "Maintenance",
+            "details": "maintenance 1: vehicule 1, du 2026-12-01 au 2026-12-03"
+        }
+    ]
+}
