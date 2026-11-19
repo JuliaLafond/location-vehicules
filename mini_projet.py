@@ -544,6 +544,35 @@ def saisir_reservation(agence):
         return
     print("Reservation enregistree, numero",reservation.id, "-montant",reservation.montant)
 
+def saisir_annulation(agence):
+    try:
+        resevation_id = saisir_entier("Numero de la reservation: ")
+        aujourdhui = saisir_date("Date du jour")
+        remboursement = agence.annuler(resevation_id, aujourdhui)
+    except ValueError as e:
+        print("refuse :", e)
+        return
+    print("Reservation annulee, remboursement :", remboursement)
+
+def saisir_depart(agence):
+    try:
+        reservation_id = saisir_entier("Numero de la reservation: ")
+        agence.enregistrer_depart(reservation_id)
+    except ValueError as e:
+        print("refuse :", e)
+        return
+    print("Depart enregistre")
+
+def saisir_retour(agence):
+    try:
+        reservation_id = saisir_entier("Numero de la reservation: ")
+        date_retour = saisir_date("Date de retour: ")
+        montant = agence.enregistrer_retour(reservation_id, date_retour)
+    except ValueError as e:
+        print("refuse :", e)
+        return
+    print("Retour enregistre, montant a payer:",montant)
+
 
 
 def afficher_menu():
@@ -555,6 +584,9 @@ def afficher_menu():
     print("5. Ajouter un client")
     print("6. Ajouter un vehicule")
     print("7. Reserver un vehicule")
+    print("8. Annuler une reservation")
+    print("9. Enregistrer un depart")
+    print("10.Enregistrer un retour")
     print("0. Quitter")
 
 def menu_principal(agence):
@@ -575,6 +607,12 @@ def menu_principal(agence):
             saisir_vehicule(agence)
         elif choix == "7":
             saisir_reservation(agence)
+        elif choix == "8":
+            saisir_annulation(agence)
+        elif choix == "9":
+            saisir_depart(agence)
+        elif choix == "10":
+            saisir_retour(agence)
         elif choix == "0":
             print("Au revoir")
             break
