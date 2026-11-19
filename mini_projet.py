@@ -573,6 +573,17 @@ def saisir_retour(agence):
         return
     print("Retour enregistre, montant a payer:",montant)
 
+def saisir_maintenace(agence):
+    try:
+        vehicule_id = saisir_entier("Numero de la vehicule: ")
+        debut = saisir_date("Date de debut ")
+        fin = saisir_date("Date de fin")
+        maintenance = agence.planifier_maintenance(vehicule_id, debut, fin)
+    except ValueError as e:
+        print("refuse :", e)
+        return
+    print("Maintenance planifiee, numero",maintenance.id)
+
 
 
 def afficher_menu():
@@ -587,6 +598,7 @@ def afficher_menu():
     print("8. Annuler une reservation")
     print("9. Enregistrer un depart")
     print("10.Enregistrer un retour")
+    print("11.Enregistrer une maintenance")
     print("0. Quitter")
 
 def menu_principal(agence):
@@ -613,6 +625,8 @@ def menu_principal(agence):
             saisir_depart(agence)
         elif choix == "10":
             saisir_retour(agence)
+        elif choix == "11":
+            saisir_maintenace(agence)
         elif choix == "0":
             print("Au revoir")
             break
