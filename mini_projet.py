@@ -486,6 +486,19 @@ class Agence:
         self._modifie()
         return maintenance
 
+def saisir_entier(texte):
+    try:
+        return int(input(texte))
+    except ValueError:
+        raise ValueError("il faut entrer un nombre entier")
+
+def saisir_date(texte):
+    valeur = input(texte +"(AAAA-MM-JJ) :")
+    try:
+        return date.fromisoformat(valeur)
+    except ValueError:
+        raise ValueError("Date invalide, format attendu AAAA-MM-JJ")
+
 def saisir_client(agence):
     nom = input("Nom du client: ")
     if nom.strip() == "":
@@ -519,6 +532,19 @@ def saisir_vehicule(agence):
     agence.ajouter_vehicule(v)
     print("Vehicule ajoute , numero",v.id)
 
+def saisir_reservation(agence):
+    try:
+        client_id= saisir_entier("Numero de client: ")
+        vehicule_id= saisir_entier("Numero de vehicule: ")
+        debut = saisir_date("Date de debut ")
+        fin = saisir_date("Date de fin")
+        reservation= agence.reserver(client_id, vehicule_id, debut, fin)
+    except ValueError as e:
+        print("refuse :", e)
+        return
+    print("Reservation enregistree, numero",reservation.id, "-montant",reservation.montant)
+
+
 
 def afficher_menu():
     print("=== Agence de location ===")
@@ -528,6 +554,7 @@ def afficher_menu():
     print("4. vehicule le plus loue")
     print("5. Ajouter un client")
     print("6. Ajouter un vehicule")
+    print("7. Reserver un vehicule")
     print("0. Quitter")
 
 def menu_principal(agence):
@@ -546,6 +573,8 @@ def menu_principal(agence):
             saisir_client(agence)
         elif choix == "6":
             saisir_vehicule(agence)
+        elif choix == "7":
+            saisir_reservation(agence)
         elif choix == "0":
             print("Au revoir")
             break
